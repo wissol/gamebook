@@ -1,41 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   index.html
+   
+   Copyright 2020 Miguel de Luis Espinosa  https://migueldeluis.es
+   
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+   
+   
+-->
 
-const section = {
-	title: "my title",
-	text: "<p>\
-	The text of each gamebook section contains one or more paragraph and\
-	other such block of texts. And even inline markup. Therefore it\
-	cannot be easily constrained to a format\
-	</p><p>\
-	For example here it's an <b>important</b> second paragraph</p>",
-	options: [1], //["This is option 1","This is option 2"], // an array it can be empty
-	};
+<head>
+<meta charset="utf-8" />
+<title>Gamebook prototype on JavaScript</title>
+<meta name="generator" content="Geany 1.33" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kreon&display=swap');
+html {font-size: 1.3rem; font-family: 'Kreon', serif; background-color: silver;}
+body {max-width: 600px; margin:10vh auto;}
+p {line-height: 1.3;}
+footer {margin: 15vh auto; font-size: 0.9rem;}
+h2::first-letter{text-transform:capitalize;}
+</style>
+</head>
+
+<body>
 	
-title = "My title";
-const section_title = `<h2>${section.title}</h2>`;
-const section_text = section.text;
-console.log(section.options);
+<header>
+<h1>Gamebook prototype</h1>
+</header>
 
-if(section.options.length === 0){options_text = "<h3>The End</h3>"} else {options_text = "<section><h3>Options</h3><ol><a class='options' href='dontcare'><li>First option</li></a></ol>"}
+<main>
+<!-- 
+Classic gamebooks are structured into "sections", each containing
+text, some options for the player or "The End" and, optially, 
+an illustration. To avoid confusion with the hmtl <section> tag, I'm 
+naming them gbSection meaning gamebook section
+-->
+<article id="gbSection">
+</article>
+</main>
 
-document.getElementById("gbSection").innerHTML = section_title + 
-												 section.text + options_text;
+<aside id="characterSheet">
+</aside>
 
-const options = document.getElementsByClassName("options");
-// Creates a special object, which is kinda an array but not quite
-// So I can't use forEach etc unless using Array.from(options);
-// discovered it using  console.log(typeof options);
+<footer>
+<p>
+&copy; <a href="https://migueldeluis.es">Miguel de Luis Espinosa</a>. 
+Software Licensed the under 
+<a href="https://www.gnu.org/licenses/gpl-3.0.en.html">
+	GNU General Public License
+</a></p>
+</footer>
+</body>
 
-// old school way to do it
-//for (i = 0; i < options.length; i++) {
-//  options.item(i).addEventListener("click", function(click){
-//  click.preventDefault();
-//  alert("Managed by the gamebook engine");
-//});
-//}
+<script src="javascript.js"></script>
 
-Array.from(options).forEach( link =>
-		link.addEventListener("click", function(click){
-		click.preventDefault();
-		alert("Managed by the gamebook engine");
-	})
-);
+</html> &lt;
