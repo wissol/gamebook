@@ -1,72 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<!--
-   index.html
-   
-   Copyright 2020 Miguel de Luis Espinosa  https://migueldeluis.es
-   
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-   MA 02110-1301, USA.
-   
-   
--->
 
-<head>
-<meta charset="utf-8" />
-<title>Gamebook prototype on JavaScript</title>
-<meta name="generator" content="Geany 1.33" />
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Kreon&display=swap');
-html {font-size: 1.3rem; font-family: 'Kreon', serif; background-color: silver;}
-body {max-width: 600px; margin:10vh auto;}
-p {line-height: 1.3;}
-footer {margin: 15vh auto; font-size: 0.9rem;}
-h2::first-letter{text-transform:capitalize;}
-</style>
-</head>
+const d6 = () => Math.floor(Math.random() * 6) + 1;
+// dice
+const twoD6 = () => d6() + d6();
+const threeD6 = () => d6() + d6() + d6(); 
+// rolls three dice
 
-<body>
+function arrayToList(thisArray=[], first=false){
+	if(thisArray.length === 0 ) {
+		if(first){
+			return "---";
+		} else { 
+			return "."; 
+			   }
+	} else {
+		if(first){
+			return thisArray[0] + arrayToList(thisArray.slice(1), false);  
+			// explicitly setting first to false because explicit is 
+			// better than implicit
+		} else {
+			return `, ${thisArray[0]}` + arrayToList(thisArray.slice(1), false);
+		}
+	}
+}
+
+const armors = new Map([
+  ['gambeson',3],
+  ['mail',5],
+  ['plate',7],
+]);
+
+console.log(armors);
+console.log(armors.get('gambeson'));
+
+const section = {
+	title: "my title",
+	text: "<p>\
+	The text of each gamebook section contains one or more paragraph and\
+	other such block of texts. And even inline markup. Therefore it\
+	cannot be easily constrained to a format\
+	</p><p>\
+	For example here it's an <b>important</b> second paragraph</p>",
+	options: [1], //["This is option 1","This is option 2"], // an array it can be empty
+	};
 	
-<header>
-<h1>Gamebook prototype</h1>
-</header>
+const player = {
+	name: "Pip", // to be entered by player Pip as default
+	skill: twoD6()+6,
+	stamina: threeD6(),
+	weapons: ["sword","dagger","bow"], // max 3 per game rules
+	shield: 0, // either shield or no shield, nothing fancy here
+	armor: "gambeson", //
+	backpack: [], //max 12 per game rules
+	rations: 4,
+	money: 23, // in silver coins
+	show() {
+		const header = `<h3>Character Sheet</h3>`;
+		const main_stats = `<p><b>Name:</b> ${this.name} <b>Skill:</b> ${this.skill} <b>Stamina:</b> ${this.stamina}</p>`;
+		const weapon_list = `<p><b>Weapons:</b>  ${arrayToList(this.weapons, first=true)}</p>`;
+		return header + "\n" + main_stats + "\n" + weapon_list;
+		},
+	};
 
-<main>
-<!-- 
-Classic gamebooks are structured into "sections", each containing
-text, some options for the player or "The End" and, optially, 
-an illustration. To avoid confusion with the hmtl <section> tag, I'm 
-naming them gbSection meaning gamebook section
--->
-<article id="gbSection">
-</article>
-</main>
+console.log( player.show());
+player.name = "Periwinkle";	
+title = "My title";
+const section_title = `<h2>${section.title}</h2>`;
+const section_text = section.text;
+console.log(section.options);
 
-<aside id="characterSheet">
-</aside>
+if(section.options.length === 0){options_text = "<h3>The End</h3>"} else {options_text = "<section><h3>Options</h3><ol><a class='options' href='dontcare'><li>First option</li></a></ol>"}
 
-<footer>
-<p>
-&copy; <a href="https://migueldeluis.es">Miguel de Luis Espinosa</a>. 
-Software Licensed the under 
-<a href="https://www.gnu.org/licenses/gpl-3.0.en.html">
-	GNU General Public License
-</a></p>
-</footer>
-</body>
+document.getElementById("gbSection").innerHTML = section_title + 
+												 section.text + options_text;
+												 
+document.getElementById("characterSheet").innerHTML = player.show();												 
 
-<script src="javascript.js"></script>
+const options = document.getElementsByClassName("options");
+// Creates a special object, which is kinda an array but not quite
+// So I can't use forEach etc unless using Array.from(options);
+// discovered it using  console.log(typeof options);
 
-</html> &lt;
+// old school way to do it
+//for (i = 0; i < options.length; i++) {
+//  options.item(i).addEventListener("click", function(click){
+//  click.preventDefault();
+//  alert("Managed by the gamebook engine");
+//});
+//}
+
+Array.from(options).forEach( link =>
+		link.addEventListener("click", function(click){
+		click.preventDefault();
+		alert("Managed by the gamebook engine");
+	})
+);
